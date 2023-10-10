@@ -1,0 +1,544 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{pgffor}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Previsão de AVC usando Regressão Logística: Um Estudo de Características Clínicas.\\
+
+
+\thanks{Trabalho Avaliativo da disciplina de Laboratório de Ciência de Dados}
+}
+
+\author{\IEEEauthorblockN{Larissa Vitória Vasconcelos Sousa}
+\IEEEauthorblockA{\textit{Universidade Federal do Ceará} \\
+\textit{Campus Jardins de Anita}\\
+Curso de Ciência de Dados \\
+Itapajé, CE-Brazil\\
+larissavvsousa@alu.ufc.br}
+\and
+\IEEEauthorblockN{Mateus Silva Matos}
+\IEEEauthorblockA{\textit{Universidade Federal do Ceará} \\
+\textit{Campus Jardins de Anita}\\
+Curso de Ciência de Dados \\
+
+Itapajé, CE-Brazil\\
+mateussilvamatos@alu.ufc.br}
+
+}
+
+\maketitle
+
+\begin{abstract}
+This article presents an analysis of two datasets related to stroke and diabetes. The objective is to explore and classify the raw data, identify common behaviors, and provide insights into the characteristics and patterns observed. The preprocessing of the data involves steps to improve data quality, such as handling missing values, translating categorical variables, and creating age groups. The exploration and visualization of the data reveal associations and correlations between variables, particularly in relation to age and glucose levels. The results show that the datasets exhibit similarities and differences in terms of age distribution, presence of risk factors, and prevalence of the conditions. These findings contribute to a better understanding of the health conditions and risk factors associated with stroke and diabetes. The article emphasizes the importance of data preprocessing in ensuring data quality and validity for further analysis and modeling. The insights gained from this study can support the development of preventive strategies, early diagnosis, and effective treatment for these health conditions.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Stroke, preprocessing, exploration, visualization.
+\end{IEEEkeywords}
+
+\section{Introdução}
+\label{AA}
+Segundo a Organização Mundial da Saúde (OMS), o AVC é a 2ª principal causa de morte no mundo, responsável por aproximadamente 11$\%$ do total de mortes. O dataset \href{https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset}{"Stroke Prediction Dataset"} apresenta um conjunto de dados disponível no Kaggle é usado para prever se um paciente tem probabilidade de sofrer um derrame com base nos parâmetros de entrada, como sexo, idade, várias doenças e tabagismo. O dataset contém informações demográficas e clínicas de indivíduos, incluindo idade, sexo, hipertensão, doença cardíaca, tabagismo, tipo de trabalho, estado civil, nível de glicose, índice de massa corporal (IMC) e status de atividade física. Além disso, é fornecido o registro sobre se um indivíduo teve ou não um AVC.
+
+A análise de pré-processamento do banco de dados brutos sobre AVC é necessária devido à importância de garantir a qualidade e a confiabilidade dos dados utilizados para análises e modelagem. O pré-processamento desempenha um papel fundamental na identificação e tratamento de problemas como valores ausentes, dados inconsistentes, variáveis categóricas não tratadas e desequilíbrio de classes. Esses problemas podem comprometer a precisão e a validade dos resultados obtidos a partir dos dados brutos.
+
+O pré-processamento de dados é uma etapa essencial em qualquer análise de dados ou modelagem estatística. Pesquisas científicas e estudos acadêmicos em diferentes áreas têm enfatizado a importância do pré-processamento de dados para garantir a qualidade e a validade dos resultados. Métodos e técnicas de pré-processamento têm sido amplamente discutidos e utilizados em diversos campos, como medicina, economia, ciência da computação e ciências sociais.
+
+
+\section{Pré-processamento dos dados}
+
+  \subsection{Descrição da mineração dos dados}
+  \label{AA}
+O pré-processamento dos dados sobre AVC envolve várias etapas para melhorar a qualidade e usabilidade das informações. Inicialmente, os nomes das colunas são traduzidos para o português, facilitando a compreensão dos dados. Em seguida, os valores categóricos são traduzidos para termos mais compreensíveis, como gênero (de "Male" e "Female" para "Masculino" e "Feminino"). Idades menores que 1 são analisadas e conclui-se que são bebês ou crianças, assim, a condição de fumante é atribuída como "Desconhecido" para elas. Essa abordagem aborda inconsistências relacionadas a idades inconsistentes. A criação de faixas etárias e categorias para o nível médio de glicose permite uma análise mais fácil. Valores ausentes (NaN) são identificados e tratados, permitindo a análise adequada dos dados. Em suma, o pré-processamento tem como objetivo melhorar a qualidade e consistência dos dados para análises futuras e modelagem final. 
+
+%"[...] as coleções de dados não necessariamente estão limpas e organizadas dessa maneira, razão pela qual é necessária a etapa de pré-processamento, que nada mais é do que o tratamento dos dados, removendo valores ausentes (ou substituindo por valores mais significativos, dependendo do caso, como média, mediana, moda etc.), formatando os dados de modo a utilizar a mesma unidade, etc., otimizando, assim, sua utilização por certo algoritmo de Machine Learning" (Netto, Amilcar; Neto, Francisco, 2021, p. 136) \\
+
+  \subsection{Exploração e Visualização dos dados}
+  \label{AA}
+Nesta seção, será realizada a exploração e visualização dos dados. Serão apresentados gráficos que ajudarão na realização de uma análise descritiva e exploratória dos dados. Em seguida, um modelo de regressão logística será treinado utilizando o conjunto de dados fornecido, com o objetivo de prever se uma pessoa terá um AVC (Acidente Vascular Cerebral) ou não, levando em consideração características como idade, sexo, pressão arterial, nível de glicose, entre outras. Essa análise proporcionará insights valiosos sobre os fatores de risco associados ao AVC e permitirá o desenvolvimento de um modelo preditivo para auxiliar na identificação precoce de indivíduos com maior probabilidade de desenvolver essa condição.
+  
+A seguir, a tabela 1 exibe o número de pacientes - após todo o pré processamento - categorizados de acordo com faixas etárias estabelecidas.
+
+%%%% tabelas
+
+
+\begin{table}[h]
+  \caption{Número de pacientes por faixa etária}
+  \centering
+  \label{tab:num_pacientes}
+  \begin{tabular}{|c|c|}
+  \hline
+  \textbf{Faixas etárias}   & \textbf{Número de pacientes}  \\ \hline
+  Crianças (0 a 9 anos)     & 472                           \\ \hline
+  Jovens (10 a 19 anos)     & 494                           \\ \hline
+  Adultos (20 a 49 anos)    & 1.934                         \\ \hline
+  Idosos (acima de 50 anos) & 2.210                         \\ \hline
+  Total                     & 5.110                         \\ \hline
+  \end{tabular}
+\end{table}
+
+  \label{AA}
+A primeira coluna indica as faixas etárias, incluindo crianças (0 a 9 anos), jovens (10 a 19 anos), adultos (20 a 49 anos) e idosos (acima de 50 anos). A segunda coluna mostra o número de pacientes encontrados em cada faixa etária. Por exemplo, há 472 crianças, 494 jovens, 1.934 adultos e 2.210 idosos. O total de pacientes é igual a 5.110. 
+
+Será apresentada a análise descritiva por meio de tabelas, fornecendo um panorama detalhado das características e tendências encontradas na amostra de dados. Cada tabela oferece informações relevantes para compreender os padrões e insights do conjunto de dados. As tabelas são uma ferramenta poderosa de visualização de dados, permitindo identificar padrões, tendências e relações importantes. Agora, exploraremos cada tabela e realizaremos a análise descritiva correspondente.
+
+A Tabela 2 apresenta a distribuição do tipo de trabalho dos pacientes em diferentes faixas etárias. O tipo de trabalho pode variar entre crianças, trabalho privado, nunca ter trabalhado, trabalho autônomo e trabalho no governo.  
+
+%% tabela tipo de trabalho
+\begin{table}[h]
+ \centering
+ \caption{Tipo de trabalho dos pacientes}
+ \begin{tabular}{|c|ccccc|}
+ \hline
+ \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Faixas\\ etárias\end{tabular}}} & \multicolumn{5}{c|}{\textbf{Variável}} \\ \cline{2-6} 
+ & \multicolumn{5}{c|}{\textbf{Tipo de trabalho}} \\ \cline{2-6} 
+ & \multicolumn{1}{c|}{\textbf{Criança}} & \multicolumn{1}{c|}{\textbf{Privado}} & \multicolumn{1}{c|}{\textbf{Nunca}} & \multicolumn{1}{c|}{\textbf{Autônomo}} & \textbf{Governo} \\ \hline
+ \textbf{Crianças} & \multicolumn{1}{c|}{99,58\%} & \multicolumn{1}{c|}{0,21\%} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0,21\%} & 0 \\ \hline
+ \textbf{Jovens} & \multicolumn{1}{c|}{43,93\%} & \multicolumn{1}{c|}{46,56\%} & \multicolumn{1}{c|}{4,25\%} & \multicolumn{1}{c|}{3,24\%} & 2,02\% \\ \hline
+ \textbf{Adultos} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{75,08\%} & \multicolumn{1}{c|}{0,05\%} & \multicolumn{1}{c|}{10,08\%} & 0 \\ \hline
+ \textbf{Idosos} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{56,20\%} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{27,47\%} & 16,33\% \\ \hline
+ \end{tabular}
+\end{table}
+
+Entre as crianças, é esperado que a maioria - ou todas - não estejam envolvidas em trabalho, entretanto uma pequena proporção está envolvida em trabalho privado ou autônomo. Nos jovens, há uma distribuição mais equilibrada entre trabalho privado, nunca ter trabalhado, trabalho autônomo e trabalho no governo. Nos adultos, a maioria está envolvida em trabalho privado, seguido por trabalho autônomo, e uma pequena porcentagem nunca trabalhou. Entre os idosos, observa-se uma participação significativa no trabalho privado e trabalho no governo, com uma parcela considerável envolvida em trabalho autônomo.
+
+A seguir, é apresentada a distribuição do tipo de residência dos pacientes em diferentes faixas etárias, essa análise permitirá compreender como o ambiente residencial está distribuído entre os grupos.
+
+%%%%% tabela tipo de residencia
+\begin{table}[h]
+ \centering
+ \caption{Tipo de residência dos pacientes}
+ \begin{tabular}{|c|cc|}
+ \hline
+ \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Faixas\\ etárias\end{tabular}}} & \multicolumn{2}{c|}{\textbf{Variável}} \\ \cline{2-3} 
+ & \multicolumn{2}{c|}{\textbf{Tipo de residência}} \\ \cline{2-3} 
+ & \multicolumn{1}{c|}{\textbf{Rural}} & \textbf{Urbano} \\ \hline
+ \textbf{Crianças} & \multicolumn{1}{c|}{47,67\%} & 52,33\% \\ \hline
+ \textbf{Jovens} & \multicolumn{1}{c|}{53,04\%} & 46,96\% \\ \hline
+ \textbf{Adultos} & \multicolumn{1}{c|}{49,79\%} & 50,21\% \\ \hline
+ \textbf{Idosos} & \multicolumn{1}{c|}{48,14\%} & 51,86\% \\ \hline
+ \end{tabular}
+\end{table}
+
+Na tabela acima, observa-se que entre as crianças, a maioria reside em áreas urbanas, representando 52,33$\%$ do total, enquanto 47,67$\%$ vivem em áreas rurais. Já entre os jovens, há uma distribuição relativamente equilibrada, com 46,96$\%$ residindo em áreas urbanas e 53,04$\%$ em áreas rurais. Ao analisar os adultos, nota-se uma proporção bastante semelhante entre residências rurais (49,79$\%$) e urbanas (50,21$\%$). Quanto aos idosos, a tendência se mantém, com 51,86$\%$ vivendo em áreas urbanas e 48,14$\%$ em áreas rurais. 
+
+
+A seguir, a tabela 4 mostra a distribuição do tabagismo entre pacientes, divididos em diferentes faixas etárias. A variável analisada é a condição fumante, que engloba quatro categorias distintas: desconhecida, nunca fumou, fumava antes e fuma atualmente.
+
+
+% tabela Condição fumante
+\begin{table}[h]
+ \centering
+ \caption{Tabagismo em pacientes}
+ \begin{tabular}{|c|cccc|}
+ \hline
+ \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Faixas\\ idades\end{tabular}}} & \multicolumn{4}{c|}{\textbf{Variável}} \\ \cline{2-5} 
+ & \multicolumn{4}{c|}{\textbf{Condição fumante}} \\ \cline{2-5} 
+ & \multicolumn{1}{c|}{\textbf{Desconhecida}} & \multicolumn{1}{c|}{\textbf{Nunca fumou}} & \multicolumn{1}{c|}{\textbf{Fumava antes}} & \textbf{Fuma} \\ \hline
+ \textbf{Crianças} & \multicolumn{1}{c|}{100\%} & \multicolumn{1}{c|}{0} & \multicolumn{1}{c|}{0} & 0 \\ \hline
+ \textbf{Jovens} & \multicolumn{1}{c|}{52,43\%} & \multicolumn{1}{c|}{37,85\%} & \multicolumn{1}{c|}{5,87\%} & 3,85\% \\ \hline
+ \textbf{Adultos} & \multicolumn{1}{c|}{20,79\%} & \multicolumn{1}{c|}{43,49\%} & \multicolumn{1}{c|}{14,27\%} & 21,46\% \\ \hline
+ \textbf{Idosos} & \multicolumn{1}{c|}{18,60\%} & \multicolumn{1}{c|}{39,10\%} & \multicolumn{1}{c|}{26,24\%} & 16,06\% \\ \hline
+ \end{tabular}
+\end{table}
+
+Cada célula da tabela representa a proporção de pacientes dentro de uma faixa etária e categoria de condição fumante. Observa-se que as crianças não possuem nenhum paciente fumante, enquanto os jovens apresentam uma distribuição mais equilibrada entre as categorias. Os adultos têm uma proporção considerável de pacientes fumantes, principalmente na categoria de "fuma atualmente". Já os idosos apresentam uma distribuição mais diversificada, com um número significativo de pacientes que fumavam antes. Essa tabela permite uma análise detalhada para a compreensão desse comportamento em relação à saúde dos pacientes. 
+
+Na tabela a seguir será apresentado a distribuição do estado civil entre os pacientes, segmentados por faixas etárias. A variável analisada é o estado civil, especificamente se os pacientes são casados ou não. 
+
+
+%%%%% tabela estado civil
+\begin{table}[h]
+\centering
+\caption{Estado civil dos pacientes}
+\begin{tabular}{|c|cc|}
+\hline
+\multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Faixas\\ etárias\end{tabular}}} & \multicolumn{2}{c|}{\textbf{Variáveis}}                                                       \\ \cline{2-3} 
+                                                                                   & \multicolumn{2}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Estado civil\\ (casado)\end{tabular}}} \\ \cline{2-3} 
+                                                                                   & \multicolumn{1}{c|}{\textbf{Sim}}                        & \textbf{Não}                       \\ \hline
+\textbf{Crianças}                                                                  & \multicolumn{1}{c|}{0}                                   & 100\%                              \\ \hline
+\textbf{Jovens}                                                                    & \multicolumn{1}{c|}{0,61\%}                              & 99,39\%                            \\ \hline
+\textbf{Adultos}                                                                   & \multicolumn{1}{c|}{67,84\%}                             & 32,16\%                            \\ \hline
+\textbf{Idosos}                                                                    & \multicolumn{1}{c|}{92,22\%}                             & 7,78\%                             \\ \hline
+\end{tabular}
+\end{table}
+
+Todas as crianças da amostra não são casadas, representando 100$\%$ da faixa etária. Nos jovens, a maioria também não é casada, com apenas 0,61$\%$ dos pacientes nessa condição. Nos adultos, a proporção de pacientes casados aumenta significativamente, chegando a 67,84$\%$. Entre os idosos, a grande maioria, 92,22$\%$ dos pacientes, é casada.
+
+Seguidamente, será apresentada a análise da existência de AVC (Acidente Vascular Cerebral) entre os pacientes, divididos em diferentes faixas etárias.
+
+%%%%%%% tabela  AVC
+\begin{table}[h]
+ \centering
+ \caption{Existência de AVC nos pacientes}
+ \begin{tabular}{|c|cc|}
+ \hline
+ \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Faixas\\ etárias\end{tabular}}} & \multicolumn{2}{c|}{\textbf{Variável}} \\ \cline{2-3} 
+ & \multicolumn{2}{c|}{\textbf{AVC}} \\ \cline{2-3} 
+ & \multicolumn{1}{c|}{\textbf{Sim}} & \textbf{Não} \\ \hline
+ \textbf{Crianças} & \multicolumn{1}{c|}{0,21\%} & 99,79\% \\ \hline
+ \textbf{Jovens} & \multicolumn{1}{c|}{0,20\%} & 99,80\% \\ \hline
+ \textbf{Adultos} & \multicolumn{1}{c|}{0,93\%} & 99,07\% \\ \hline
+ \textbf{Idosos} & \multicolumn{1}{c|}{10,36\%} & 89,64\% \\ \hline
+ \end{tabular}
+\end{table}
+
+Observa-se que as crianças e os jovens têm uma baixa proporção de casos de AVC, com valores próximos a 0,2$\%$ em ambas as faixas etárias. Nos adultos, a proporção de pacientes com AVC é ligeiramente maior, atingindo 0,93$\%$, enquanto nos idosos, o percentual de casos de AVC é mais significativo, chegando a 10,36$\%$. Esses dados sugerem que a ocorrência de AVC está mais presente entre os pacientes idosos, tornando-se um aspecto relevante para estratégias preventivas e intervenções médicas nessa faixa etária. Essa análise descritiva permite uma melhor compreensão da distribuição do AVC em relação à idade dos pacientes e fornece informações cruciais para o aprimoramento do cuidado e tratamento desses indivíduos.
+
+
+
+% gráficos
+
+  \label{AA}
+Na Figura 1, será realizada uma análise do gênero dos pacientes na faixa etária infantil. 
+
+\begin{figure}[H]
+   \caption{Gênero: Crianças}
+   \centering
+   \includegraphics[width=0.5\textwidth]{gen cr.png}
+\end{figure}
+
+No grupo das crianças entre 0 e 9 anos, observa-se uma leve predominância de meninos em relação às meninas.
+
+Na Figura 2, será realizada uma análise do gênero dos pacientes na faixa etária adolescente/jovens. 
+
+\begin{figure}[H]
+   \caption{Gênero: Jovens}
+   \centering
+   \includegraphics[width=0.5\textwidth]{gen jo.png}
+\end{figure}
+
+No grupo dos adolescentes/jovens entre 10 e 19 anos, é possível notar uma ligeira predominância de meninas em relação aos meninos.
+
+Na Figura 3, será realizada uma análise do gênero dos pacientes na faixa etária adultos. 
+\begin{figure}[H]
+   \caption{Gênero: Adultos}
+   \centering
+   \includegraphics[width=0.5\textwidth]{gen ad.png}
+\end{figure}
+No grupo de adultos, compreendendo indivíduos com idades entre 20 e 49 anos, é notável a presença de mais de 1000 mulheres registradas, em comparação com o número de homens que alcança 700. É relevante destacar que apenas 1$\%$ dos pacientes identificam-se com o gênero "Outro". Essas informações ressaltam a disparidade de gênero nessa faixa etária e a predominância feminina no conjunto de dados.
+
+Na Figura 4, uma análise será realizada do gênero dos pacientes da faixa etária idosos.
+
+\begin{figure}[H]
+   \caption{Gênero: Idosos}
+   \centering
+   \includegraphics[width=0.5\textwidth]{gen id.png}
+\end{figure}
+No grupo de idosos, composto por pacientes com idades acima de 50 anos, destaca-se a presença de mais de 1200 mulheres registradas, enquanto os homens, totalizam mais de 900. 
+
+\label{AA}
+Fica evidente que a predominância é do gênero feminino entre os pacientes. No entanto, uma exceção ocorre no grupo das crianças, onde há uma proporção ligeiramente maior de meninos em relação às meninas. Já no grupo de adultos, é interessante notar que existem mais de 1000 mulheres registradas, enquanto o número de homens chegam a 500. Além disso, é importante mencionar que apenas 1$\%$ dos pacientes se identifica com o gênero "Outro". 
+
+Na Figura 5, será apresentado a presença ou ausência de hipertensão nos pacientes. 
+
+\begin{figure}[H]
+   \caption{Hipertensão por faixa etária}
+   \centering
+   \includegraphics[width=0.5\textwidth]{hiperte.png}
+\end{figure}
+
+As crianças não tem hipertensão (Não: 100$\%$), adultos e idosos já possuem uma porcentagem significativa de que têm hipertensão, idosos são quase 500 pacientes.
+
+Na Figura 6, serão apresentados Box Plots de idade em cada faixa etária.
+\begin{figure}[h]
+  \caption{Idades das crianças}
+  \centering
+  \includegraphics[width=0.5\textwidth]{bp crian.png}
+\end{figure}
+
+Os valores estatísticos incluem o máximo (9), que representa o maior valor observado; o terceiro quartil (7), que indica o valor abaixo do qual 75$\%$ dos dados estão concentrados; a mediana (4), que divide a distribuição ao meio; o primeiro quartil (1.88), que delimita o valor abaixo do qual 25$\%$ dos dados estão concentrados; e o mínimo (0.08), que representa o valor mais baixo observado.
+
+Agora será realizada uma análise do Box Plot da idade dos jovens. Essa visualização estatística proporcionará informações relevantes sobre medidas de tendência central, variação e possíveis valores atípicos, permitindo uma compreensão mais aprofundada da distribuição da idade dos jovens.
+
+\begin{figure}[h]
+  \caption{Idades dos jovens}
+  \centering
+  \includegraphics[width=0.5\textwidth]{bp jo.png}
+\end{figure}
+
+No BoxPlot da idade dos jovens, o valor máximo (max) é de 19 anos, indicando a idade mais alta observada. O terceiro quartil (Q3) é de 17 anos, representando o valor abaixo do qual 75$\%$ dos dados estão concentrados. A mediana, localizada no centro da caixa, possui o valor de 15 anos, dividindo a distribuição ao meio. O primeiro quartil (Q1) é 13, determinando o valor abaixo do qual 25$\%$ dos dados estão concentrados, e o valor mínimo (min) observado é 10 anos. 
+
+Na Figura 8, será realizada uma análise do Box Plot da idade dos adultos.
+
+\begin{figure}[h]
+  \caption{Idades dos adultos}
+  \centering
+  \includegraphics[width=0.5\textwidth]{bp ad.png}
+\end{figure}
+
+No gráfico da idade dos adultos, observa-se os seguintes valores estatísticos: o valor máximo (max) é de 49 anos, representando a idade mais alta registrada no conjunto de dados. O terceiro quartil (Q3) é de 43 anos, indicando que 75$\%$ dos adultos têm idade inferior a esse valor. A mediana está localizada em 36 anos, dividindo a distribuição ao meio. O primeiro quartil (Q1) é 28, indicando que 25$\%$ dos adultos têm idade abaixo desse valor. O valor mínimo (min) observado é 20 anos.
+
+Na Figura 9, iremos realizar uma análise do Box Plot que representa a distribuição da idade dos idosos. 
+
+\begin{figure}[h]
+  \caption{Idades dos idosos}
+  \centering
+  \includegraphics[width=0.5\textwidth]{bp id.png}
+\end{figure}
+
+No caso dos idosos, o valor máximo é de 82 anos, indicando a idade mais avançada registrada no conjunto de dados. O terceiro quartil (Q3) é de 74 anos, indicando que 75$\%$ dos idosos têm idade inferior a esse valor. A mediana está localizada em 63 anos, dividindo a distribuição ao meio. O primeiro quartil (Q1) é 56, indicando que 25$\%$ dos idosos têm idade abaixo desse valor. O valor mínimo (min) observado é 50 anos. 
+
+Na Figura 10 a seguir, uma análise dos gráficos sobre os pacientes que possuem doença cardíaca será realizada.
+
+\begin{figure}[H]
+   \caption{Doença cardíaca por faixa etária}
+   \centering
+   \includegraphics[width=0.5\textwidth]{doenc card.png}
+\end{figure} 
+
+Ao analisar a presença de doença cardíaca em diferentes faixas etárias, percebe-se que a maioria dos pacientes não apresenta a doença. No entanto, é importante destacar que na faixa dos idosos, há uma proporção significativa de pacientes afetados por essa condição. Isso sugere que a incidência de doença cardíaca aumenta à medida que a idade avança, tornando-se mais prevalente entre os indivíduos mais velhos. 
+
+A Figura 11 mostra as relações entre idade, nível médio de glicose e IMC na faixa etária infantil. 
+
+\begin{figure}[H]
+   \caption{}
+   \centering
+   \includegraphics[width=0.5\textwidth]{corr cr.png}
+\end{figure} 
+
+A matriz de correlação revela que, na faixa etária das crianças, há uma correlação negativa muito fraca entre o nível médio de glicose e a idade (-0.043). Da mesma forma, a correlação positiva entre o IMC e a idade é fraca (0.098), não demonstrando uma relação linear forte entre essas duas variáveis. Além disso, a correlação entre o IMC e o nível médio de glicose é quase nula (0.0033). Em suma, a matriz de correlação sugere que não há relações lineares significativas entre o nível médio de glicose, o IMC e a idade nas crianças.
+
+A Figura 12 apresenta as relações entre as mesmas três variáveis, na faixa etária de jovens. 
+\begin{figure}[H]
+   \caption{}
+   \centering
+   \includegraphics[width=0.5\textwidth]{corr jo.png}
+\end{figure}
+A relação entre a glicose média e a idade é de -0,012 (cor azul), indicando uma correlação negativa muito fraca. Por outro lado, a correlação entre IMC e idade é de 0,31 (cor rosa), indicando uma correlação moderadamente positiva. Isso implica uma relação linear relativamente forte entre IMC e idade em jovens, sugerindo que o IMC tende a aumentar com a idade nessa faixa etária. A correlação entre o IMC e a glicemia média é de -0,022 (cor azul), indicando uma correlação negativa muito fraca. Isso sugere que não há relação linear significativa entre o IMC e os níveis médios de glicose no sangue em jovens.
+
+Na Figura 13 a seguir, é possível visualizar as relações entre as três variáveis: idade, nível médio de glicose e IMC (Índice de Massa Corporal) na faixa etária de adultos.
+\begin{figure}[H]
+   \caption{}
+   \centering
+   \includegraphics[width=0.5\textwidth]{corr ad.png}
+\end{figure}
+Na matriz de correlação dos adultos, a relação entre glicose média e idade foi de 0,099, indicando uma relação positiva fraca. Isso sugere que existe uma pequena relação entre os níveis médios de glicose em adultos e que conforme a idade aumenta, a glicose aumenta juntamente com a idade nessa faixa etária. Para IMC e idade, a correlação foi de 0,17, indicando uma correlação moderadamente positiva. Isso significa que existe uma relação relativamente forte entre o IMC e a idade em adultos, sugerindo que o IMC aumenta com a idade. A correlação entre IMC e glicose média foi de 0,11, indicando uma relação positiva fraca. Isso sugere uma leve associação entre o IMC e os níveis médios de glicose em adultos.
+
+Na Figura 14, apresenta-se a representação gráfica das interações entre as variáveis idade, nível médio de glicose e IMC (Índice de Massa Corporal) na faixa etária dos idosos.
+\begin{figure}[H]
+   \caption{}
+   \centering
+   \includegraphics[width=0.5\textwidth]{corr id.png}
+\end{figure}
+A correlação entre o nível médio de glicose no sangue e a idade é de 0,084 (cor verde), indicando uma fraca correlação positiva. Isso sugere uma pequena associação entre os níveis médios de glicose no sangue de idosos e a idade, sugerindo que os níveis de glicose no sangue nessa faixa etária tendem a aumentar ligeiramente com a idade. A correlação entre IMC e idade é de -0,19 (cor azul), indicando uma correlação moderadamente negativa. Isso significa que existe uma associação relativamente forte entre IMC e idade em idosos, sugerindo que o IMC tende a diminuir com a idade. A correlação entre o IMC e a glicemia média foi de 0,19 (cor rosa), indicando uma correlação moderadamente positiva. Isso sugere uma associação modesta entre o IMC e os níveis médios de glicose no sangue em idosos. \\
+
+
+\begin{figure}[H]
+   \caption{Relação entre glicose e AVC em faixas etárias}
+   \centering
+   \includegraphics[width=0.5\textwidth]{grafico dispersao.png}
+\end{figure}
+
+Os gráficos acima, retratam a relação entre glicose e AVC, os pontos em azul mostram os pacientes que possuem diabetes e AVC, é importante observar a grande quantidade na faixa etária de idosos. \\
+
+\section*{MODELO: REGRESSÃO LOGÍSTICA}
+
+Após todas as análises, um modelo de Regressão Logística foi treinado com o objetivo de prever se uma pessoa terá um AVC ou não, com base em características como idade, sexo, hipertensão, nível de glicose, doença cardíaca, IMC, entre outras. A base de dados bruta é lida novamente em outro arquivo, o pré-processamento dos dados é realizado para lidar com valores ausentes e codificar variáveis categóricas, garantindo a adequação dos dados para a modelagem. Para evitar qualquer viés decorrente do desequilíbrio entre as classes, é aplicado o oversampling (técnica utilizada no campo de aprendizado de máquina e mineração de dados para lidar com conjuntos de dados desbalanceados) na classe minoritária. 
+
+O conjunto de dados é então dividido em conjuntos de treinamento e teste para avaliar o desempenho do modelo. Além disso, as variáveis numéricas são normalizadas/escaladas utilizando o StandardScaler. O modelo de Regressão Logística é definido, treinado com os dados de treinamento e posteriormente utilizado para fazer previsões nos dados de teste. Para avaliar a performance do modelo, métricas como acurácia, precisão, recall e F1-score são calculadas e exibidas. 
+
+\begin{table}[h]
+\centering
+\caption{Métricas para avaliação do modelo}
+\begin{tabular}{|ccl|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Modelo: Regressão Logística}}                                          \\ \hline
+\multicolumn{1}{|c|}{\textbf{Métricas}} & \multicolumn{1}{c|}{\textbf{Resultados}} & \textbf{Em \%} \\ \hline
+\multicolumn{1}{|c|}{\textbf{Acurácia}} & \multicolumn{1}{c|}{0.7994858611825193}  & 79,94\%        \\ \hline
+\multicolumn{1}{|c|}{\textbf{Precisão}} & \multicolumn{1}{c|}{0.7685185185185185}  & 76,85\%        \\ \hline
+\multicolumn{1}{|c|}{\textbf{Recall}}   & \multicolumn{1}{c|}{0.8556701030927835}  & 85,56\%        \\ \hline
+\multicolumn{1}{|l|}{\textbf{F1-score}} & \multicolumn{1}{l|}{0.8097560975609756}  & 80,97\%        \\ \hline
+\end{tabular}
+\end{table}
+
+ As métricas de desempenho indicam que o modelo de regressão logística possui uma acurácia de 0.799, classificando corretamente cerca de 79,9$\%$ dos casos. A precisão é de 0.769, o que significa que cerca de 76,9$\%$ das instâncias classificadas como positivas pelo modelo são realmente positivas. O recall é de 0.856, indicando que o modelo identifica corretamente cerca de 85,6$\%$ das instâncias positivas. O F1-score é de 0.810, uma medida equilibrada entre precisão e recall. Essas métricas fornecem uma avaliação do desempenho geral e específico do modelo na classificação de casos de AVC.
+
+Por fim, é gerada e apresentada a matriz de confusão, fornecendo uma visão detalhada dos resultados obtidos pelo modelo.
+
+\begin{table}[h]
+\centering
+\caption{Matriz de confusão}
+\begin{tabular}{cc|cc|}
+\cline{3-4}
+                                                         &                      & \multicolumn{2}{c|}{\textbf{Real}}                                                                                                                             \\ \cline{3-4} 
+\textbf{}                                                &                      & \multicolumn{1}{c|}{\textbf{Tem AVC}}                                                    & \textbf{Não tem AVC}                                                \\ \hline
+\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Previsto}}} & \textbf{Tem AVC}     & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Verd. Positivos\\ 830\end{tabular}} & \begin{tabular}[c]{@{}c@{}}Falsos Positivos\\ 250\end{tabular}      \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                                   & \textbf{Não tem AVC} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Falsos Negativos\\ 140\end{tabular}}      & \begin{tabular}[c]{@{}c@{}}Verd. Negativos\\ 725\end{tabular} \\ \hline
+\end{tabular}
+\end{table}
+
+A matriz de confusão é uma tabela que resume as classificações feitas por um modelo de classificação para cada classe. Ela mostra o número de verdadeiros positivos, falsos positivos, falsos negativos e verdadeiros negativos. No caso apresentado, o modelo classificou corretamente 830 casos como "Tem AVC" (verdadeiros positivos), classificou incorretamente 250 casos como "Tem AVC" quando na verdade não tinham (falsos positivos), deixou de identificar corretamente 140 casos como "Tem AVC" (falsos negativos) e classificou corretamente 725 casos como "Não tem AVC" (verdadeiros negativos).
+
+Com base nas métricas de desempenho apresentadas (acurácia, precisão, recall e F1-score) e na matriz de confusão, pode-se concluir que o modelo de regressão logística obteve um desempenho satisfatório. \\
+
+
+\subsection{Principais técnicas usadas na primeira etapa da disciplina: pré-processamento}
+
+\begin{itemize}
+\item Foi utilizado Estatística Descritiva, com a função "describe" do Python, para analisar as variáveis quantitativas discretas e contínuas como contagem, média, desvio padrão, quartis, valor mínimo e máximo usando a biblioteca "Pandas";
+\item Avaliamos a correlação entre as variáveis usando Inferência e a biblioteca "Seaborn" para verificar as possíveis ligações entre as colunas do dataset;
+\item Para a visualização do comportamento dos dados, foi usada a linguagem de programação Python utilizando as bibliotecas "Matplotlib" e "Plotly".
+\end{itemize}
+
+
+
+\section{Avaliando um segundo \textit{raw dataset}}
+ 
+O segundo dataset está relacionado a Diabetes. A influência de determinadas variaveis na possibilidade de possuir ou não a doença.uma definição mais precisa sobre diabetes: É uma doença crônica caracterizada pelo aumento dos níveis de glicose (açúcar) no sangue. Isso ocorre devido a problemas na produção ou na utilização da insulina, um hormônio secretado pelo pâncreas que regula a quantidade de glicose no corpo. A insulina permite que as células absorvam a glicose do sangue e a utilizem como fonte de energia.O estudo não foi tão aprofundado nesse dataset comparado com dataset sobre AVC, pois o estudo principal era sobre o que motivava o acontecimento do AVC na sociedade.
+
+
+
+ \begin{figure}[H]
+    \centering
+   \caption{Base de dados}
+   \includegraphics[width=0.4\textwidth]{traduçao.png}
+\end{figure}
+
+A base de dados possui 9 variaveis, sendo as mais utilizadas "glicose" e "possui ou não diabetes".
+
+% \begin{figure}[H]
+% \centering
+ %   \caption{observando se possuem valores nulos}
+  % \includegraphics[width=0.4\textwidth]{nulos.png}
+%\end{figure}
+
+
+% \begin{figure}[H]
+ %   \centering
+  %  \caption{tipos de variaveis}
+ %  \includegraphics[width=0.4\textwidth]{descriçao.png}
+%\end{figure}
+
+
+  \begin{figure}[H]
+    \centering
+    \caption{Análise descritiva}
+   \includegraphics[width=0.4\textwidth]{describe.png}
+\end{figure}
+
+Na Fig. acima podemos ver os valores de media, mediana e quartis.
+
+% \begin{figure}[H]
+ %    \centering
+  % \caption{trocando valores binarios}
+   %   \includegraphics[width=0.4\textwidth]{possui.png}
+  %\end{figure}
+  
+   
+ \begin{figure}[H]
+     \centering
+   \caption{Correlação das variáveis}
+   \includegraphics[width=0.4\textwidth]{correlacaoo.png}
+  \end{figure}
+  
+ \begin{figure}[H]
+     \centering
+    \caption{Idade por faixa etaria}
+    \includegraphics[width=0.2\textwidth]{faixas.png}
+  \end{figure}
+
+
+ \begin{figure}[H]
+     \centering
+    \caption{Porcentagem dos que possuem ou não diabetes}   
+   \includegraphics[width=0.4\textwidth]{porcentagem.png}
+\end{figure}
+
+É notável que a maior parte das pessoas estudadas não possuem diabetes.
+
+
+  \subsection{Exploração e Visualização dos dados}
+  
+ \begin{figure}[H]
+    \centering
+   \caption{Possuem ou não diabetes}
+   \includegraphics[width=0.4\textwidth]{grafico.png}
+ \end{figure}
+
+É notável que quanto maior for a glicose muito provavelmente essa pessoa possuirá diabetes.
+
+\begin{figure}[H]
+    \centering
+   \caption{Usando gráfico de pizza}
+   \includegraphics[width=0.4\textwidth]{pizza.png}
+\end{figure}
+
+  \begin{figure}[H]
+    \centering
+   \caption{Relação glicose vs diabetes}
+   \includegraphics[width=0.4\textwidth]{glicose.png}
+ \end{figure}
+
+   \begin{figure}[H]
+    \centering
+    \caption{Glicose }
+   \includegraphics[width=0.4\textwidth]{boxglico.png}
+   \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Diabetes}
+   \includegraphics[width=0.4\textwidth]{boxdiabetes.png}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+   \caption{Correlação de pearson}
+   \includegraphics[width=0.4\textwidth]{corrpearson.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Relação idade vs glicose}
+   \includegraphics[width=0.4\textwidth]{bolas.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Relação insulina vs glicose}
+   \includegraphics[width=0.4\textwidth]{insulina.png}
+\end{figure}
+
+
+
+\section{Resultados}
+Ao comparar os dois datasets, observou-se que ambos apresentaram uma distribuição variando de crianças a idosos em relação à faixa etária. No entanto, as proporções de pacientes em cada faixa etária foram diferentes. No dataset de AVC, houve uma concentração maior de pacientes idosos, enquanto no dataset de Diabetes, a distribuição foi mais equilibrada entre as faixas etárias.
+
+Em relação às variáveis específicas de cada dataset, a glicose foi uma variável comum em ambos. Foi identificada uma correlação positiva entre os níveis de glicose e a presença de AVC, indicando um maior risco de AVC em pacientes com níveis mais altos de glicose. No dataset de Diabetes, também observou-se uma relação semelhante, sugerindo que níveis elevados de glicose estão associados à presença da doença.
+
+Uma diferença notável entre os datasets foi a presença de informações sobre tabagismo apenas no dataset de AVC. Essa diferença limitou a análise dos fatores de risco relacionados ao tabagismo no dataset de Diabetes.
+
+De forma geral, ambos os datasets forneceram informações valiosas sobre as características das amostras e os padrões presentes. A análise exploratória dos dados revelou associações entre variáveis e forneceu insights sobre os fatores de risco e as condições de saúde em estudo. A visualização dos dados por meio de gráficos e tabelas facilitou a compreensão e comunicação dos resultados, auxiliando na tomada de decisões informadas por profissionais de saúde.
+
+
+
+
+\section*{Conclusões}
+Ao analisar os dados brutos dos dois datasets, encontramos comportamentos comuns que fornecem informações valiosas sobre as características das amostras e os padrões presentes. No dataset de AVC, observamos que crianças não têm casos de AVC, enquanto idosos apresentam uma proporção significativa dessa condição. Além disso, notamos uma proporção considerável de adultos fumantes, principalmente na categoria de "fuma atualmente", e uma predominância de pacientes casados entre os idosos. No dataset de Diabetes, a maioria das pessoas estudadas não possui a doença, e identificamos uma relação positiva entre os níveis de glicose no sangue e a presença de diabetes. A análise de correlação confirmou essas associações entre as variáveis, e gráficos de dispersão e box plots mostraram uma distribuição mais elevada de glicose nos pacientes com diabetes. Essas descobertas são essenciais para o desenvolvimento de estratégias de prevenção, diagnóstico precoce e tratamento eficaz, e a visualização dos dados facilita a compreensão e comunicação dos resultados para profissionais de saúde.
+
+
+\begin{thebibliography}{00}
+\bibitem{b1} BEHRMAN, Kennedy R. "Fundamentos de Python para ciência de dados". Porto Alegre: Grupo A, 2023. E-book. ISBN 9788582605974. Disponível em: \url{https://app.minhabiblioteca.com.br/#/books/9788582605974/}. Acesso em: 21 jun. 2023.
+\bibitem{b2} FÁVERO, Luiz P. "Análise de Dados". Rio de Janeiro: Grupo GEN, 2015. E-book. ISBN 9788595153226. Disponível em: \url{https://app.minhabiblioteca.com.br/#/books/9788595153226/}. Acesso em: 01 jul. 2023.
+\bibitem{b3} NETTO, Amilcar; MACIEL, Francisco. "Python para Data Science e Machine Learning Descomplicado". Rio de Janeiro: Editora Alta Books, 2021. E-book. ISBN 9786555203172. Disponível em: \url{https://app.minhabiblioteca.com.br/#/books/9786555203172/}. Acesso em: 28 jun. 2023.
+\end{thebibliography}
+\vspace{12pt}
+
+
+\end{document}
